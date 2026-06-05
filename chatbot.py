@@ -3,6 +3,34 @@ import re
 import datetime
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
+
+def load_dotenv():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    possible_paths = [
+        os.path.join(script_dir, ".env"),
+        os.path.join(os.getcwd(), ".env"),
+        ".env"
+    ]
+    for env_path in possible_paths:
+        if os.path.exists(env_path):
+            try:
+                with open(env_path, "r", encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if line and not line.startswith("#"):
+                            parts = line.split("=", 1)
+                            if len(parts) == 2:
+                                k, v = parts
+                                k = k.strip()
+                                v = v.strip().strip("'\"")
+                                os.environ[k] = v
+                break
+            except Exception as e:
+                pass
+
+# Load environment variables
+load_dotenv()
+
 from groq import Groq
 from rag_engine import RAGEngine
 
