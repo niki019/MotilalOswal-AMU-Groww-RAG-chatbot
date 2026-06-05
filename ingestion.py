@@ -14,6 +14,15 @@ URLS = [
     "https://groww.in/mutual-funds/motilal-oswal-most-focused-long-term-fund-direct-growth",
     "https://groww.in/mutual-funds/motilal-oswal-contra-fund-direct-growth",
     "https://groww.in/mutual-funds/motilal-oswal-digital-india-fund-direct-growth",
+    "https://groww.in/mutual-funds/motilal-oswal-bse-enhanced-value-index-fund-direct-growth",
+    "https://groww.in/mutual-funds/motilal-oswal-gold-and-silver-passive-fof-direct-growth",
+    "https://groww.in/mutual-funds/motilal-oswal-most-focused-midcap-30-fund-direct-growth",
+    "https://groww.in/mutual-funds/motilal-oswal-nifty-500-index-fund-direct-growth",
+    "https://groww.in/mutual-funds/motilal-oswal-nifty-500-momentum-50-index-fund-direct-growth",
+    "https://groww.in/mutual-funds/motilal-oswal-nifty-capital-market-index-fund-direct-growth",
+    "https://groww.in/mutual-funds/motilal-oswal-nifty-india-defence-index-fund-direct-growth",
+    "https://groww.in/mutual-funds/motilal-oswal-nifty-midcap-150-index-fund-direct-growth",
+    "https://groww.in/mutual-funds/motilal-oswal-small-cap-fund-direct-growth",
     "https://groww.in/mutual-funds/amc/motilal-oswal-mutual-funds"
 ]
 
@@ -29,7 +38,16 @@ FUND_MAPPING = {
     "multicap": "multi-cap",
     "long_term": "most-focused-long-term",
     "contra": "contra-fund",
-    "digital_india": "digital-india"
+    "digital_india": "digital-india",
+    "bse_enhanced_value": "bse-enhanced-value",
+    "gold_silver": "gold-and-silver-passive-fof",
+    "midcap_30": "most-focused-midcap-30",
+    "nifty_500": "nifty-500-index",
+    "nifty_500_momentum": "nifty-500-momentum-50",
+    "nifty_capital": "nifty-capital-market",
+    "nifty_defence": "nifty-india-defence",
+    "nifty_midcap": "nifty-midcap-150",
+    "small_cap": "small-cap-fund"
 }
 
 def clean_html_to_text(html_content):

@@ -53,6 +53,33 @@ FUND_MAPPING = {
     },
     "digital_india": {
         "keywords": ["digital india", "digital", "digital fund", "it fund", "technology fund"]
+    },
+    "bse_enhanced_value": {
+        "keywords": ["bse enhanced value", "enhanced value", "bse value"]
+    },
+    "gold_silver": {
+        "keywords": ["gold and silver", "gold & silver", "passive fof", "gold silver"]
+    },
+    "midcap_30": {
+        "keywords": ["focused midcap 30", "midcap 30", "focused midcap"]
+    },
+    "nifty_500": {
+        "keywords": ["nifty 500 index", "nifty 500 fund", "nifty 500"]
+    },
+    "nifty_500_momentum": {
+        "keywords": ["nifty 500 momentum", "momentum 50 index", "momentum 50"]
+    },
+    "nifty_capital": {
+        "keywords": ["nifty capital market", "capital market index", "capital market fund"]
+    },
+    "nifty_defence": {
+        "keywords": ["nifty india defence", "nifty defence", "defence index", "defence fund"]
+    },
+    "nifty_midcap": {
+        "keywords": ["nifty midcap 150", "midcap 150 index", "midcap 150 fund"]
+    },
+    "small_cap": {
+        "keywords": ["small cap fund", "small cap", "smallcap"]
     }
 }
 
