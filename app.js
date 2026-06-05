@@ -358,4 +358,59 @@ document.addEventListener("DOMContentLoaded", () => {
         const text = chatInput.value.trim();
         sendMessage(text);
     });
+
+    // ==========================================
+    // 6. DYNAMIC SCHEMES EXPLORER
+    // ==========================================
+    const loadSchemesList = async () => {
+        try {
+            const response = await fetch(`${API_BASE}/api/schemes`);
+            if (!response.ok) return;
+            const schemes = await response.json();
+            if (!schemes || schemes.length === 0) return;
+            
+            const schemesGrid = document.querySelector(".schemes-grid");
+            if (!schemesGrid) return;
+            
+            schemesGrid.innerHTML = "";
+            schemes.forEach(s => {
+                const card = document.createElement("div");
+                card.className = "scheme-card";
+                
+                // Set appropriate tag class
+                let tagClass = "tag-equity";
+                const t = s.tag.toLowerCase();
+                if (t.includes("elss")) tagClass = "tag-elss";
+                else if (t.includes("sectoral")) tagClass = "tag-sectoral";
+                else if (t.includes("thematic") || t.includes("contra")) tagClass = "tag-thematic";
+                else if (t.includes("commodity")) tagClass = "tag-sectoral";
+                
+                card.setAttribute("data-query", `What is the expense ratio and NAV of the ${s.full_name}?`);
+                
+                card.innerHTML = `
+                    <div class="scheme-card-header">
+                        <div class="scheme-tag ${tagClass}">${s.tag}</div>
+                        <h4 class="scheme-name">${s.name}</h4>
+                    </div>
+                    <div class="scheme-stats-list">
+                        <div class="stat-row"><span class="stat-label">NAV (Direct)</span><span class="stat-val">${s.nav}</span></div>
+                        <div class="stat-row"><span class="stat-label">Expense Ratio</span><span class="stat-val">${s.expense}</span></div>
+                        <div class="stat-row"><span class="stat-label">Exit Load</span><span class="stat-val">${s.exit}</span></div>
+                        <div class="stat-row"><span class="stat-label">Benchmark</span><span class="stat-val">${s.benchmark}</span></div>
+                    </div>
+                    <button class="scheme-action-btn">Ask Assistant 💬</button>
+                `;
+                
+                card.addEventListener("click", () => {
+                    switchToChatView();
+                    sendMessage(`What is the expense ratio and NAV of the ${s.full_name}?`);
+                });
+                
+                schemesGrid.appendChild(card);
+            });
+        } catch (err) {
+            console.error("Failed to load schemes dynamically, using fallbacks:", err);
+        }
+    };
+    loadSchemesList();
 });

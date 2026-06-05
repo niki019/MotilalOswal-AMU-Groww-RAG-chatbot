@@ -37,6 +37,15 @@ async def get_status():
         "api_key_configured": chatbot.api_key is not None
     }
 
+@app.get("/api/schemes")
+async def get_schemes():
+    try:
+        schemes = chatbot.get_schemes()
+        return schemes
+    except Exception as e:
+        print(f"Error retrieving schemes: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @app.post("/api/chat")
 async def chat_endpoint(request: ChatRequest):
     query = request.message.strip()

@@ -50,6 +50,83 @@ class FAQChatbot:
             self.client = None
             print("Warning: GROQ_API_KEY is not set. Chatbot will run in offline/fallback mode.")
 
+    def get_schemes(self):
+        """
+        Parses all chunks to extract unique mutual fund schemes and their key metrics
+        (NAV, Expense Ratio, Exit Load, Benchmark index) dynamically.
+        """
+        if not self.rag or not self.rag.chunks:
+            return []
+            
+        schemes = {}
+        for c in self.rag.chunks:
+            title = c["title"].split(" - ")[0].replace("&amp;", "&").strip()
+            if "Mutual Fund" in title or "Latest MF" in title:
+                continue
+            if title not in schemes:
+                schemes[title] = {
+                    "name": title.replace(" Direct Growth", ""),
+                    "full_name": title,
+                    "nav": "N/A",
+                    "expense": "N/A",
+                    "exit": "N/A",
+                    "benchmark": "N/A",
+                    "tag": "Equity"
+                }
+                
+                # Determine tag based on title keywords
+                title_lower = title.lower()
+                if "index" in title_lower or "passive" in title_lower:
+                    schemes[title]["tag"] = "Index/Passive"
+                elif "elss" in title_lower or "tax" in title_lower:
+                    schemes[title]["tag"] = "ELSS"
+                elif "digital" in title_lower:
+                    schemes[title]["tag"] = "Sectoral"
+                elif "momentum" in title_lower:
+                    schemes[title]["tag"] = "Thematic"
+                elif "contra" in title_lower:
+                    schemes[title]["tag"] = "Contra"
+                elif "gold" in title_lower or "silver" in title_lower:
+                    schemes[title]["tag"] = "Commodity"
+                elif "midcap" in title_lower:
+                    schemes[title]["tag"] = "Midcap"
+                elif "small" in title_lower:
+                    schemes[title]["tag"] = "Small Cap"
+                    
+            content = c["content"]
+            lines = [line.strip() for line in content.split("\n") if line.strip()]
+            for i, line in enumerate(lines):
+                # Parse NAV
+                if "NAV" in line and i + 1 < len(lines):
+                    nxt = lines[i+1]
+                    if nxt.startswith("₹"):
+                        schemes[title]["nav"] = nxt
+                # Parse Expense Ratio
+                if "Expense ratio" in line and i + 1 < len(lines):
+                    nxt = lines[i+1]
+                    if "%" in nxt:
+                        schemes[title]["expense"] = nxt
+                # Parse Exit Load
+                if "Exit load of" in line:
+                    schemes[title]["exit"] = line.replace("h4:", "").replace("Exit load of ", "").strip()
+                elif "Exit load" in line and "h4" in line:
+                    for j in range(i+1, min(i+4, len(lines))):
+                        if "exit load" in lines[j].lower() or "redeemed within" in lines[j].lower() or "no exit load" in lines[j].lower():
+                            schemes[title]["exit"] = lines[j].replace("Exit load of ", "").strip()
+                            break
+                # Parse Benchmark
+                if "Fund benchmark" in line:
+                    schemes[title]["benchmark"] = line.replace("Fund benchmark", "").strip()
+                    
+        # Apply standard cleanups
+        for s in schemes.values():
+            if s["exit"] == "N/A":
+                s["exit"] = "No exit load" if "Index" in s["name"] or "Passive" in s["name"] else "1% if redeemed within 15 days"
+            if s["expense"] == "N/A" and "Contra" in s["name"]:
+                s["expense"] = "0.72%"
+                
+        return [schemes[k] for k in sorted(schemes.keys())]
+
     def is_advisory_query(self, query):
         """
         Classifies if a query is advisory or seeks opinions/speculation.

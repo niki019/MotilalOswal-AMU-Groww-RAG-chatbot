@@ -70,14 +70,44 @@ if "messages" not in st.session_state:
 
 # Sidebar Navigation Layout
 with st.sidebar:
-    st.markdown("### 🟢 Groww AI")
-    st.markdown("*Your Wealth Assistant*")
+    st.markdown(
+        """
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="#00d09c">
+                <rect x="3" y="16" width="3" height="4" rx="1" opacity="0.3" />
+                <rect x="8" y="11" width="3" height="9" rx="1" opacity="0.3" />
+                <rect x="13" y="6" width="3" height="14" rx="1" opacity="0.3" />
+                <rect x="18" y="1" width="3" height="19" rx="1" opacity="0.3" />
+                <path d="M3 14.5l5.5-5.5 5 5L21 6v4a1 1 0 0 0 2 0V3a1 1 0 0 0-1-1h-7a1 1 0 0 0 0 2h4.5l-6 6-5-5L2 13a1 1 0 0 0 1 1.5z"/>
+            </svg>
+            <div>
+                <span style="font-size: 1.2rem; font-weight: 700; color: #f0f2f5;">Groww AI</span><br/>
+                <span style="font-size: 0.75rem; color: #8a94a6;">Your Wealth Assistant</span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
     
     st.markdown("---")
     
     # Navigation views routing
     view = st.radio("Workspace Navigation", ["Chat Assistant", "Explore Schemes", "Compliance & Settings"])
     
+    st.markdown("---")
+    st.markdown("### 💬 Recent Chats")
+    
+    mock_recent_chats = [
+        ("Large & Midcap Expense", "What is the expense ratio of the Motilal Oswal Large and Midcap Fund?"),
+        ("Contra Fund Exit Load", "What is the exit load of the Motilal Oswal Contra Fund?"),
+        ("Digital India Manager", "Who are the fund managers of the Motilal Oswal Digital India Fund?"),
+        ("ELSS 3 Year Lock-in", "What is the lock-in period of Motilal Oswal Most Focused Long Term Fund?")
+    ]
+    
+    for title, query in mock_recent_chats:
+        if st.button(f"💬 {title}", key=f"recent_{title.replace(' ', '_')}"):
+            st.session_state.clicked_query = query
+            
     st.markdown("---")
     if st.button("Reset Conversation"):
         st.session_state.messages = [
@@ -109,6 +139,10 @@ if view == "Chat Assistant":
     ]
     
     clicked_query = None
+    if "clicked_query" in st.session_state and st.session_state.clicked_query:
+        clicked_query = st.session_state.clicked_query
+        st.session_state.clicked_query = None # Reset after reading
+        
     for idx, (label, query) in enumerate(suggestions):
         if cols[idx % 3].button(label, key=f"sug_{idx}"):
             clicked_query = query
@@ -149,16 +183,22 @@ elif view == "Explore Schemes":
     st.subheader("📊 Explore Mutual Fund Schemes")
     st.write("Factual metrics extracted from Groww official fund pages.")
     
-    schemes = [
-        {"name": "Motilal Oswal Large and Midcap Fund Direct Growth", "nav": "₹38.72", "expense": "0.73%", "exit": "1% (365 days)", "benchmark": "NIFTY Large Midcap 250 TRI"},
-        {"name": "Motilal Oswal Contra Fund Direct Growth", "nav": "₹14.28", "expense": "0.72%", "exit": "1% (365 days)", "benchmark": "Nifty 500 TRI"},
-        {"name": "Motilal Oswal Digital India Fund Direct Growth", "nav": "₹18.42", "expense": "0.76%", "exit": "1% (15 days)", "benchmark": "BSE Teck TRI"},
-        {"name": "Motilal Oswal Multi Cap Fund Direct Growth", "nav": "₹10.92", "expense": "0.80%", "exit": "1% (365 days)", "benchmark": "Nifty 500 Multicap 50:25:25 TRI"},
-        {"name": "Motilal Oswal Active Momentum Fund Direct Growth", "nav": "₹12.65", "expense": "0.78%", "exit": "1% (15 days)", "benchmark": "Nifty 200 Momentum 30 TRI"},
-        {"name": "Motilal Oswal Most Focused Long Term Fund Direct Growth", "nav": "₹82.64", "expense": "0.75%", "exit": "3 Years Lock-in (ELSS)", "benchmark": "Nifty 500 TRI"},
-        {"name": "Motilal Oswal Most Focused Multicap 35 Fund Direct Growth", "nav": "₹53.40", "expense": "0.82%", "exit": "1% (365 days)", "benchmark": "Nifty 500 TRI"}
-    ]
-    
+    try:
+        schemes = st.session_state.chatbot.get_schemes()
+    except Exception as e:
+        schemes = []
+        
+    if not schemes:
+        schemes = [
+            {"name": "Motilal Oswal Large and Midcap Fund", "nav": "₹38.72", "expense": "0.73%", "exit": "1% (365 days)", "benchmark": "NIFTY Large Midcap 250 TRI"},
+            {"name": "Motilal Oswal Contra Fund", "nav": "₹14.28", "expense": "0.72%", "exit": "1% (365 days)", "benchmark": "Nifty 500 TRI"},
+            {"name": "Motilal Oswal Digital India Fund", "nav": "₹18.42", "expense": "0.76%", "exit": "1% (15 days)", "benchmark": "BSE Teck TRI"},
+            {"name": "Motilal Oswal Multi Cap Fund", "nav": "₹10.92", "expense": "0.80%", "exit": "1% (365 days)", "benchmark": "Nifty 500 Multicap 50:25:25 TRI"},
+            {"name": "Motilal Oswal Active Momentum Fund", "nav": "₹12.65", "expense": "0.78%", "exit": "1% (15 days)", "benchmark": "Nifty 200 Momentum 30 TRI"},
+            {"name": "Motilal Oswal ELSS Tax Saver Fund", "nav": "₹62.71", "expense": "0.78%", "exit": "N/A", "benchmark": "NIFTY 500 Total Return Index"},
+            {"name": "Motilal Oswal Flexi Cap Fund", "nav": "₹63.82", "expense": "1.06%", "exit": "Exit load of 1% if redeemed within 15 days", "benchmark": "NIFTY 500 Total Return Index"}
+        ]
+        
     for s in schemes:
         with st.expander(s["name"]):
             col1, col2 = st.columns(2)
