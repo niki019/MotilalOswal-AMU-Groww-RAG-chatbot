@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groww AI - Mutual Fund Wealth Assistant</title>
+    <meta name="description" content="A facts-only RAG-powered wealth assistant for Motilal Oswal Mutual Fund schemes, providing objective statistics without investment advice.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+    
+    <!-- ================== SCREEN 1: LOGIN SCREEN ================== -->
+    <div id="loginScreen" class="login-screen-container">
+        <div class="login-logo-header">
+            <div class="groww-logo-box">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                </svg>
+            </div>
+            <span class="groww-logo-text">Groww</span>
+            <p class="groww-logo-tagline">Simple. Transparent. Secure.</p>
+        </div>
+
+        <div class="login-card">
+            <form id="loginForm" autocomplete="off">
+                <div class="input-group">
+                    <label for="loginEmail">Email or Mobile Number</label>
+                    <div class="input-with-icon">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="loginEmail" placeholder="Enter your credentials" required value="a.mercer@groww.io">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="label-row">
+                        <label for="loginPassword">Password</label>
+                        <a href="#" class="forgot-link">Forgot?</a>
+                    </div>
+                    <div class="input-with-icon">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required value="password123">
+                        <span class="password-toggle" id="passwordToggle">👁️</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="secure-login-btn">
+                    Secure Login 
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="margin-left: 8px;">
+                        <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21 12l-8.15-8.15-1.42 1.42L16.86 11H5v2z"/>
+                    </svg>
+                </button>
+            </form>
+
+            <div class="or-divider">
+                <span>or continue with</span>
+            </div>
+
+            <div class="biometric-row">
+                <button class="biometric-btn" type="button" id="touchIdBtn">
+                    <span class="biometric-icon">🖐️</span>
+                    <span>Touch ID</span>
+                </button>
+                <button class="biometric-btn" type="button" id="faceIdBtn">
+                    <span class="biometric-icon">👤</span>
+                    <span>Face ID</span>
+                </button>
+            </div>
+
+            <div class="register-note">
+                Don't have an account? <a href="#" class="register-link">Register now</a>
+            </div>
+        </div>
+
+        <div class="login-footer">
+            <div class="encryption-note">
+                🔒 END-TO-END ENCRYPTED
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Help Center</a>
+            </div>
+            <p class="copyright-text">© 2026 Groww AI. All rights reserved.</p>
+        </div>
+    </div>
+
+    <!-- ================== SCREEN 2: MAIN DASHBOARD & APP SCREEN ================== -->
+    <div id="mainAppScreen" class="main-app-container hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="groww-logo-box small">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">Groww AI</span>
+                    <span class="brand-tagline">Your Wealth Assistant</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <button class="menu-item active" data-view="chatView">
+                    <span class="menu-icon">💬</span>
+                    <span>Chat</span>
+                </button>
+                <button class="menu-item" data-view="exploreView">
+                    <span class="menu-icon">📊</span>
+                    <span>Explore Schemes</span>
+                </button>
+                <button class="menu-item" data-view="profileView">
+                    <span class="menu-icon">👤</span>
+                    <span>Compliance Profile</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <button class="new-chat-btn" id="newChatBtn">
+                    <span class="btn-plus">+</span> New Chat
+                </button>
+                
+                <div class="theme-toggle-container">
+                    <span class="theme-label">Theme Mode</span>
+                    <button class="theme-toggle-btn" id="themeToggleBtn">
+                        <span class="toggle-icon">☀️</span>
+                    </button>
+                </div>
+
+                <div class="sidebar-footer-links">
+                    <button class="footer-link-btn" id="btnSettings">⚙️ Settings</button>
+                    <button class="footer-link-btn" id="btnHelp">❓ Help</button>
+                </div>
+
+                <!-- User Profile Info -->
+                <div class="user-profile-widget">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop" alt="User Avatar" class="profile-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+                    <div class="profile-text">
+                        <div class="profile-name">Alex Mercer</div>
+                        <div class="profile-role">Pro Investor</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-workspace">
+            <!-- App Header -->
+            <header class="workspace-header">
+                <div class="header-left">
+                    <h2 class="view-title" id="viewTitle">Groww</h2>
+                </div>
+                <div class="header-right">
+                    <!-- Search Bar -->
+                    <div class="header-search">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" placeholder="Search stocks, mutual funds, or tax..." disabled>
+                    </div>
+                    
+                    <!-- Notification Bell -->
+                    <button class="header-icon-btn" aria-label="Notifications">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                        </svg>
+                        <span class="notif-badge"></span>
+                    </button>
+
+                    <!-- User Profile Icon -->
+                    <div class="header-user-icon">
+                        <span>AM</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Workspace Views -->
+            <div class="workspace-content">
+                <!-- 1. CHAT VIEW -->
+                <div id="chatView" class="view-panel">
+                    <div class="chat-workspace-layout">
+                        <!-- Left Panel: Recent Chats -->
+                        <div class="recent-chats-panel">
+                            <h3 class="panel-section-title">Recent Chats</h3>
+                            <p class="panel-section-subtitle">Your market queries</p>
+                            <div class="recent-chats-list" id="recentChatsList">
+                                <!-- Dynamic recent list -->
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Chat Feed -->
+                        <div class="chat-feed-panel">
+                            <div class="chat-messages-container" id="chatMessages">
+                                <!-- Welcome Message -->
+                                <div class="message-wrapper bot">
+                                    <div class="message-bubble">
+                                        <p><strong>Hello Alex!</strong> I am your facts-only FAQ assistant for <strong>Motilal Oswal mutual fund schemes</strong>.</p>
+                                        <p>I retrieve information directly from verified AMC documents. How can I assist you with scheme stats (NAV, expense ratio, exit loads, benchmark index, fund managers) today?</p>
+                                    </div>
+                                    <div class="message-footer">Groww AI Assistant</div>
+                                </div>
+                                
+                                <!-- Suggested Questions -->
+                                <div class="suggest-questions-wrapper" id="suggestQuestions">
+                                    <h4 class="suggest-title">Suggested Mutual Fund Questions</h4>
+                                    <div class="suggest-grid">
+                                        <button class="suggest-chip" data-query="What is the expense ratio of the Motilal Oswal Large and Midcap Fund?">
+                                            📊 Expense Ratio: Large & Midcap Fund
+                                        </button>
+                                        <button class="suggest-chip" data-query="Who is the fund manager of the Motilal Oswal Contra Fund?">
+                                            👨‍💼 Managers: Contra Fund
+                                        </button>
+                                        <button class="suggest-chip" data-query="What is the exit load of the Motilal Oswal Active Momentum Fund?">
+                                            ⚖️ Exit Load: Active Momentum
+                                        </button>
+                                        <button class="suggest-chip" data-query="Should I invest in the Motilal Oswal Large and Midcap Fund?">
+                                            🛡️ Investment Recommendation (Advisory Check)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chat Input Area -->
+                            <div class="chat-input-container">
+                                <div class="chat-typing-indicator hidden" id="typingIndicator">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+
+                                <form class="chat-input-bar" id="chatForm" autocomplete="off">
+                                    <button class="input-action-btn" type="button" aria-label="Attach file" id="btnAttach">
+                                        📎
+                                    </button>
+                                    <input type="text" id="chatInput" placeholder="Ask about mutual funds, expense ratios, exit loads..." required>
+                                    <button class="input-action-btn" type="button" aria-label="Voice input" id="btnVoice">
+                                        🎤
+                                    </button>
+                                    <button class="send-btn" type="submit" aria-label="Send query">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                                <div class="disclaimer-footer">
+                                    Groww AI can make mistakes. Always consult a financial advisor for major decisions. Facts-only, no investment advice.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. EXPLORE VIEW (Grid of schemes) -->
+                <div id="exploreView" class="view-panel hidden">
+                    <div class="explore-container">
+                        <div class="explore-header-section">
+                            <h3 class="section-title">Motilal Oswal Schemes</h3>
+                            <p class="section-desc">Factual metrics extracted from Groww official fund pages. Click any scheme card to query the assistant.</p>
+                        </div>
+
+                        <div class="schemes-grid">
+                            <!-- Scheme Card 1 -->
+                            <div class="scheme-card" data-query="What is the expense ratio and NAV of the Motilal Oswal Large and Midcap Fund?">
+                                <div class="scheme-card-header">
+                                    <div class="scheme-tag tag-equity">Equity</div>
+                                    <h4 class="scheme-name">Large and Midcap Fund</h4>
+                                </div>
+                                <div class="scheme-stats-list">
+                                    <div class="stat-row"><span class="stat-label">NAV (Direct)</span><span class="stat-val">₹38.72</span></div>
+                                    <div class="stat-row"><span class="stat-label">Expense Ratio</span><span class="stat-val">0.73%</span></div>
+                                    <div class="stat-row"><span class="stat-label">Exit Load</span><span class="stat-val">1% (365 days)</span></div>
+                                    <div class="stat-row"><span class="stat-label">Benchmark</span><span class="stat-val">NIFTY Large Midcap 250 TRI</span></div>
+                                </div>
+                                <button class="scheme-action-btn">Ask Assistant 💬</button>
+                            </div>
+
+                            <!-- Scheme Card 2 -->
+                            <div class="scheme-card" data-query="What is the exit load and details of the Motilal Oswal Contra Fund?">
+                                <div class="scheme-card-header">
+                                    <div class="scheme-tag tag-equity">Equity</div>
+                                    <h4 class="scheme-name">Contra Fund</h4>
+                                </div>
+                                <div class="scheme-stats-list">
+                                    <div class="stat-row"><span class="stat-label">NAV (Direct)</span><span class="stat-val">₹14.28</span></div>
+                                    <div class="stat-row"><span class="stat-label">Expense Ratio</span><span class="stat-val">0.72%</span></div>
+                                    <div class="stat-row"><span class="stat-label">Exit Load</span><span class="stat-val">1% (365 days)</span></div>
+                                    <div class="stat-row"><span class="stat-label">Benchmark</span><span class="stat-val">Nifty 500 TRI</span></div>
+                                </div>
+                                <button class="scheme-action-btn">Ask Assistant 💬</button>
+                            </div>
+
+                            <!-- Scheme Card 3 -->
+                            <div class="scheme-card" data-query="Who is the manager of the Motilal Oswal Digital India Fund?">
+                                <div class="scheme-card-header">
+                                    <div class="scheme-tag tag-sectoral">Sectoral</div>
+                                    <h4 class="scheme-name">Digital India Fund</h4>
+                                </div>
+                                <div class="scheme-stats-list">
+                                    <div class="stat-row"><span class="stat-label">NAV (Direct)</span><span class="stat-val">₹18.42</span></div>
+                                    <div class="stat-row"><span class="stat-label">Expense Ratio</span><span class="stat-val">0.76%</span></div>
+                                    <div class="stat-row"><span class="stat-label">Exit Load</span><span class="stat-val">1% (15 days)</span></div>
+                                    <div class="stat-row"><span class="stat-label">Benchmark</span><span class="stat-val">BSE Teck TRI</span></div>
+                                </div>
+                                <button class="scheme-action-btn">Ask Assistant 💬</button>
+                            </div>
+
+                            <!-- Scheme Card 4 -->
+                            <div class="scheme-card" data-query="What is the asset allocation and size of the Motilal Oswal Multi Cap Fund?">
+                                <div class="scheme-card-header">
+                                    <div class="scheme-tag tag-equity">Equity</div>
+                                    <h4 class="scheme-name">Multi Cap Fund</h4>
+                                </div>
+                                <div class="scheme-stats-list">
+                                    <div class="stat-row"><span class="stat-label">NAV (Direct)</span><span class="stat-val">₹10.92</span></div>
+                                    <div class="stat-row"><span class="stat-label">Expense Ratio</span><span class="stat-val">0.80%</span></div>
+                                    <div class="stat-row"><span class="stat-label">Exit Load</span><span class="stat-val">1% (365 days)</span></div>
+                                    <div class="stat-row"><span class="stat-label">Benchmark</span><span class="stat-val">Nifty 500 Multicap 50:25:25 TRI</span></div>
+                                </div>
+                                <button class="scheme-action-btn">Ask Assistant 💬</button>
+                            </div>
+
+                            <!-- Scheme Card 5 -->
+                            <div class="scheme-card" data-query="What are the details of the Motilal Oswal Active Momentum Fund?">
+                                <div class="scheme-card-header">
+                                    <div class="scheme-tag tag-thematic">Thematic</div>
+                                    <h4 class="scheme-name">Active Momentum Fund</h4>
+                                </div>
+                                <div class="scheme-stats-list">
+                                    <div class="stat-row"><span class="stat-label">NAV (Direct)</span><span class="stat-val">₹12.65</span></div>
+                                    <div class="stat-row"><span class="stat-label">Expense Ratio</span><span class="stat-val">0.78%</span></div>
+                                    <div class="stat-row"><span class="stat-label">Exit Load</span><span class="stat-val">1% (15 days)</span></div>
+                                    <div class="stat-row"><span class="stat-label">Benchmark</span><span class="stat-val">Nifty 200 Momentum 30 TRI</span></div>
+                                </div>
+                                <button class="scheme-action-btn">Ask Assistant 💬</button>
+                            </div>
+
+                            <!-- Scheme Card 6 -->
+                            <div class="scheme-card" data-query="What is the lock-in period and NAV of the Motilal Oswal Most Focused Long Term Fund?">
+                                <div class="scheme-card-header">
+                                    <div class="scheme-tag tag-elss">ELSS</div>
+                                    <h4 class="scheme-name">Long Term (ELSS) Fund</h4>
+                                </div>
+                                <div class="scheme-stats-list">
+                                    <div class="stat-row"><span class="stat-label">NAV (Direct)</span><span class="stat-val">₹82.64</span></div>
+                                    <div class="stat-row"><span class="stat-label">Expense Ratio</span><span class="stat-val">0.75%</span></div>
+                                    <div class="stat-row"><span class="stat-label">Lock-in Period</span><span class="stat-val">3 Years (Tax Saver)</span></div>
+                                    <div class="stat-row"><span class="stat-label">Benchmark</span><span class="stat-val">Nifty 500 TRI</span></div>
+                                </div>
+                                <button class="scheme-action-btn">Ask Assistant 💬</button>
+                            </div>
+
+                            <!-- Scheme Card 7 -->
+                            <div class="scheme-card" data-query="What is the expense ratio and exit load of the Motilal Oswal Most Focused Multicap 35 Fund?">
+                                <div class="scheme-card-header">
+                                    <div class="scheme-tag tag-elss">Equity</div>
+                                    <h4 class="scheme-name">Focused Multicap 35 Fund</h4>
+                                </div>
+                                <div class="scheme-stats-list">
+                                    <div class="stat-row"><span class="stat-label">NAV (Direct)</span><span class="stat-val">₹53.40</span></div>
+                                    <div class="stat-row"><span class="stat-label">Expense Ratio</span><span class="stat-val">0.82%</span></div>
+                                    <div class="stat-row"><span class="stat-label">Exit Load</span><span class="stat-val">1% (365 days)</span></div>
+                                    <div class="stat-row"><span class="stat-label">Benchmark</span><span class="stat-val">Nifty 500 TRI</span></div>
+                                </div>
+                                <button class="scheme-action-btn">Ask Assistant 💬</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. COMPLIANCE & PROFILE VIEW -->
+                <div id="profileView" class="view-panel hidden">
+                    <div class="profile-container">
+                        <div class="profile-header-section">
+                            <h3 class="section-title">Compliance Profile</h3>
+                            <p class="section-desc">Privacy & Compliance architecture demonstrating strict PII (Personal Identification Information) safeguarding.</p>
+                        </div>
+
+                        <div class="profile-grid">
+                            <!-- Card 1: User Account Details (Masked) -->
+                            <div class="profile-details-card">
+                                <h4 class="card-title">👤 Account Information</h4>
+                                <p class="card-subtitle">Masked fields indicating zero-PII exposure</p>
+                                
+                                <div class="details-list">
+                                    <div class="detail-row">
+                                        <span class="detail-label">Holder Name</span>
+                                        <span class="detail-val font-semibold">Alex Mercer</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Email Address</span>
+                                        <span class="detail-val">a.mercer@groww.io</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Risk Profile</span>
+                                        <span class="detail-val badge-accent">Aggressive</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">PAN Number</span>
+                                        <span class="detail-val masked">XXXXX9482X</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Aadhaar Card</span>
+                                        <span class="detail-val masked">XXXX-XXXX-9182</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span class="detail-label">Bank Account</span>
+                                        <span class="detail-val masked">XXXXXXXX8910</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: Security & Privacy Policy Details -->
+                            <div class="profile-details-card policy-card">
+                                <h4 class="card-title">🛡️ Privacy Guardrail System</h4>
+                                <p class="card-subtitle">How we protect your sensitive details</p>
+                                
+                                <div class="policy-points">
+                                    <div class="policy-point">
+                                        <div class="point-icon">🔒</div>
+                                        <div class="point-text">
+                                            <h5>Zero Ingestion of PII</h5>
+                                            <p>Our chatbot applies an immediate regular expression filter to detect email addresses, phone numbers, PAN, Aadhaar, and bank account sequences.</p>
+                                        </div>
+                                    </div>
+                                    <div class="policy-point">
+                                        <div class="point-icon">🚫</div>
+                                        <div class="point-text">
+                                            <h5>Pre-execution Refusal</h5>
+                                            <p>Queries containing sensitive identifiers are blocked locally before they are parsed by the database search or sent to external LLMs.</p>
+                                        </div>
+                                    </div>
+                                    <div class="policy-point">
+                                        <div class="point-icon">⚖️</div>
+                                        <div class="point-text">
+                                            <h5>Strict Advisory Refusal</h5>
+                                            <p>The engine enforces strict classification filters to redirect any queries asking for advice, opinions, or buy/sell recommendations to official AMFI/SEBI educational resource pages.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
