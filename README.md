@@ -6,7 +6,7 @@ A facts-only, compliant Retrieval-Augmented Generation (RAG) wealth chatbot assi
 
 ### 🌐 Live Demo Chat Link
 You can open and test the live chatbot execution directly over the internet here:
-👉 **[https://44af08c61f14d2.lhr.life](https://44af08c61f14d2.lhr.life)**
+👉 **[https://b483cfa3ee4bcf.lhr.life](https://b483cfa3ee4bcf.lhr.life)**
 
 *(Note: Logs into the Groww workspace automatically with secure biometric simulated authentication or pre-filled mock credentials: `a.mercer@groww.io` / `password123`)*
 
