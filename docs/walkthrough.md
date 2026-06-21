@@ -87,7 +87,7 @@ We staged and pushed the project files to the remote repository:
 
 ### 2. Live Demo Link Update & Premium HTML UI Integration
 We updated the root [README.md](file:///d:/new-project/README.md) file to point directly to the premium HTML/CSS/JS Groww-themed frontend served by the FastAPI application:
-- **Public URL**: [https://6d39225b8a4d38.lhr.life](https://6d39225b8a4d38.lhr.life)
+- **Public URL**: [https://44af08c61f14d2.lhr.life](https://44af08c61f14d2.lhr.life)
 - **Deployment Details**: Routed the localhost.run tunnel directly to port `8000` (`ssh -R 80:127.0.0.1:8000 nokey@localhost.run`). This serves the custom SPA built locally (featuring the secure login page, interactive chat history, schema explorer grid, and masked privacy panels).
 - Verified that the public link returns 200 OK and renders the exact premium Groww workspace environment.
 - **Logo Icon Redesign**: Replaced the generic box-plus logo icon on both the login page and the sidebar header with a premium, financial growth-themed SVG (composed of four rounded, semi-transparent rising growth bars overlaid with a bold, upward-pointing trendline arrow), enhancing the visual appeal.
